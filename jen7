@@ -1,0 +1,6 @@
+node
+{
+stage('cloning from GIT') {
+git branch: 'main', credentialsId: 'GIT REPO', url: 'https://github.com/vishal003/jenkins-sonarqube.git'
+}
+}
