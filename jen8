@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven-Latest' 
+    }
+
+    stages {
+        stage('Cloning from GIT') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Sanketbhoir03/jenkins-sonarqube.git'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh 'mvn clean package sonar:sonar'
+                }
+            }
+        }
+      
+        stage('Quality Gate Check') {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+    }
+}
